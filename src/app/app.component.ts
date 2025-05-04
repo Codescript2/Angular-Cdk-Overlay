@@ -1,12 +1,28 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, TemplateRef, viewChild, ViewContainerRef } from "@angular/core";
+import { CsDialogService } from "./services/dialog.service";
+import { CsDialogComponent } from "./components/dialog/dialog.component";
+import { CsCloseDialogDirective } from "./directives/close-dialog.directive";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  imports: [CsCloseDialogDirective]
 })
 export class AppComponent {
-  title = 'angular-cdk-features';
+
+  dialogService = inject(CsDialogService);
+
+  template = viewChild(TemplateRef);
+
+  viewContainerRef = viewChild('template', {read: ViewContainerRef});
+
+  openDialog() {
+    this.dialogService.openDialog(this.template()!, this.viewContainerRef()!);
+  }
+
+  openDialogComponent() {
+    this.dialogService.openDialog(CsDialogComponent);
+  }
+
 }
